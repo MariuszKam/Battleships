@@ -8,10 +8,22 @@ public class CordConverter {
 
     public CordConverter (String cords) { //Constructor
         this.cords = cords;
-        this.xBeginning = numberConverter(separateCords(cords)[0]);
-        this.yBeginning = Math.min(getNumber(separateCords(cords)[0]), getNumber(separateCords(cords)[1]));
-        this.xEnd = numberConverter(separateCords(cords)[1]);
-        this.yEnd = Math.max(getNumber(separateCords(cords)[0]), getNumber(separateCords(cords)[1]));
+        try {
+            this.xBeginning = numberConverter(separateCords(cords)[0]);
+            this.yBeginning = Math.min(getNumber(separateCords(cords)[0]), getNumber(separateCords(cords)[1]));
+            this.xEnd = numberConverter(separateCords(cords)[1]);
+            this.yEnd = Math.max(getNumber(separateCords(cords)[0]), getNumber(separateCords(cords)[1]));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            this.xBeginning = numberConverter(separateCords(cords)[0]);
+            this.yBeginning = getNumber(separateCords(cords)[0]);
+        }
+        if(xEnd != 0) {
+            if(xBeginning > xEnd) {         //Overcome when player puts ship from down to top
+                int x = xEnd;
+                xEnd = xBeginning;
+                xBeginning = x;
+            }
+        }
     }
 
     protected boolean isCorrectLocation() {
@@ -53,6 +65,7 @@ public class CordConverter {
 
     private int numberConverter(String cords) {
         char letter = cords.charAt(0);
+        letter = Character.toUpperCase(letter); //Overcome user lowercase input
         if (letter == 'A') {
             return 1;
         } else if (letter == 'B') {
